@@ -1,0 +1,16 @@
+# AI-Rulez Configuration (migrated to V4 TOML format)
+# Documentation: https://github.com/Goldziher/ai-rulez
+
+version = '4.0'
+name = 'scoop-bucket'
+description = 'Scoop bucket with app manifests for xberg-io CLI tools'
+gitignore = true
+presets = ['claude', 'codex', 'copilot', 'cursor', 'antigravity']
+builtins = ['default-commands']
+
+compact = true
+[[includes]]
+name = 'xberg-core'
+source = 'https://github.com/xberg-io/agent-conventions.git'
+path = 'modules/core'
+merge_strategy = 'local-override'

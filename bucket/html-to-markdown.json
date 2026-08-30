@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json",
+  "version": "3.11.6",
+  "description": "High-performance HTML to Markdown converter powered by Rust",
+  "homepage": "https://github.com/xberg-io/html-to-markdown",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/xberg-io/html-to-markdown/releases/download/v3.11.6/cli-x86_64-pc-windows-msvc.zip",
+      "hash": "05d42bb200d9259e8efc0046b17d253375ace24d3c2a4298f0d9d6fdfb2b685d",
+      "extract_dir": "cli-x86_64-pc-windows-msvc"
+    }
+  },
+  "bin": "html-to-markdown.exe",
+  "suggest": {
+    "vcredist": "extras/vcredist2022"
+  },
+  "checkver": {
+    "github": "https://github.com/xberg-io/html-to-markdown"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/xberg-io/html-to-markdown/releases/download/v$version/cli-x86_64-pc-windows-msvc.zip"
+      }
+    }
+  }
+}

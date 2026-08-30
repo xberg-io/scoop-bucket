@@ -1,0 +1,130 @@
+name: Validate manifests
+
+on:
+  pull_request:
+    paths:
+      - "bucket/**"
+      - ".github/workflows/validate-manifests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "bucket/**"
+      - ".github/workflows/validate-manifests.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  schema:
+    name: Schema
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Fetch the Scoop manifest schema
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 3 --retry-delay 2 \
+            -o scoop-schema.json \
+            https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - name: Validate every manifest against the schema
+        run: uvx check-jsonschema --schemafile scoop-schema.json bucket/*.json
+
+      - name: Check the filename matches the app name Scoop will install
+        run: |
+          set -euo pipefail
+          # Scoop derives the app name from the filename, not from anything inside the
+          # manifest, so a mismatch between the file and its `bin` silently installs an
+          # app under a name no install instruction anywhere mentions.
+          status=0
+          for manifest in bucket/*.json; do
+            app="$(basename "$manifest" .json)"
+            bin="$(jq -r 'if (.bin | type) == "array" then .bin[0] else .bin end' "$manifest")"
+            if [[ "$bin" != "${app}.exe" ]]; then
+              echo "::error file=${manifest}::app name '${app}' does not match bin '${bin}'"
+              status=1
+            fi
+          done
+          exit "$status"
+
+  changed:
+    name: Detect changed manifests
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.detect.outputs.apps }}
+      any: ${{ steps.detect.outputs.any }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: List changed manifests
+        id: detect
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          if [[ -n "${BASE_SHA:-}" ]]; then
+            files="$(git diff --name-only --diff-filter=d "${BASE_SHA}" HEAD -- 'bucket/*.json')"
+          else
+            files="$(ls bucket/*.json)"
+          fi
+          apps="$(printf '%s\n' "$files" | sed -n 's#^bucket/\(.*\)\.json$#\1#p' | jq -R . | jq -sc .)"
+          [[ "$apps" == "null" ]] && apps='[]'
+          echo "apps=${apps}" >>"$GITHUB_OUTPUT"
+          if [[ "$apps" == "[]" ]]; then
+            echo "any=false" >>"$GITHUB_OUTPUT"
+          else
+            echo "any=true" >>"$GITHUB_OUTPUT"
+          fi
+          echo "Changed apps: ${apps}"
+
+  install:
+    name: Install ${{ matrix.app }}
+    needs: changed
+    if: ${{ needs.changed.outputs.any == 'true' }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJson(needs.changed.outputs.apps) }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Invoke-RestMethod -Uri https://get.scoop.sh -OutFile install-scoop.ps1
+          & .\install-scoop.ps1 -RunAsAdmin
+          "$env:USERPROFILE\scoop\shims" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Add this checkout as a bucket and install
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # Add the checkout itself, not the published repo: the whole point is to prove
+          # the manifest in *this* PR installs, before it is merged.
+          scoop bucket add xberg-pr "$env:GITHUB_WORKSPACE"
+          scoop install "xberg-pr/${{ matrix.app }}"
+          if ($LASTEXITCODE -ne 0) { throw "scoop install ${{ matrix.app }} failed" }
+
+      - name: Run the installed binary
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # The only end-to-end proof that `extract_dir`, the shim, and the DLL closure
+          # are all correct. A manifest can hash and validate perfectly and still install
+          # a binary that cannot start.
+          & "${{ matrix.app }}" --version
+          if ($LASTEXITCODE -ne 0) { throw "${{ matrix.app }} --version exited $LASTEXITCODE" }

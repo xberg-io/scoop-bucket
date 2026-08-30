@@ -1,0 +1,65 @@
+# Mirrors xberg-io/homebrew-tap's poly.toml, minus the Ruby tooling (no formulae here)
+# and minus its Formula/** lint exclusions. bucket/*.json is deliberately NOT excluded:
+# manifests are plain JSON with no vendor DSL, so they format like everything else.
+
+# discovery-exclude (pending polylint feature): direct `poly lint .`/`poly fmt .` does not yet honor these; they apply
+# to the hook builtins below. Globs:
+#   **/*.lock
+#   **/Cargo.lock
+#   **/go.sum
+#   **/package-lock.json
+#   **/pnpm-lock.yaml
+#   **/uv.lock
+
+[per-file-ignores]
+# GitHub renders this file as the PR body, where a level-1 heading would sit above the
+# author's text as a title the PR does not have. Its first heading is deliberately "##".
+".github/PULL_REQUEST_TEMPLATE.md" = ["MD041"]
+
+[defaults]
+line_length = 120
+line_ending = "lf"
+final_newline = true
+trim_trailing_whitespace = true
+
+[hooks]
+stages = ["pre-commit"]
+
+[hooks.builtin]
+lint = { exclude = [
+  "**/*.lock",
+  "**/Cargo.lock",
+  "**/go.sum",
+  "**/package-lock.json",
+  "**/pnpm-lock.yaml",
+  "**/uv.lock",
+] }
+fmt = { exclude = [
+  "**/*.lock",
+  "**/Cargo.lock",
+  "**/go.sum",
+  "**/package-lock.json",
+  "**/pnpm-lock.yaml",
+  "**/uv.lock",
+] }
+commit = { stages = ["commit-msg"] }
+file_safety = { exclude = [
+  "**/*.lock",
+  "**/Cargo.lock",
+  "**/go.sum",
+  "**/package-lock.json",
+  "**/pnpm-lock.yaml",
+  "**/uv.lock",
+] }
+
+# --- catalog tools (standalone binaries, PATH-probed) ---
+[tools.shfmt]
+enabled = true
+
+[tools.actionlint]
+enabled = true
+[[hooks.sources]]
+id = "ai-rulez"
+git = "https://github.com/Goldziher/ai-rulez.git"
+revision = "v4.9.3"
+hooks = ["ai-rulez-validate"]

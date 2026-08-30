@@ -14,7 +14,10 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Only supersede runs on a pull request. Six release pipelines push to main, each
+  # carrying a different manifest, and they all share `github.ref` -- cancelling there
+  # would let one repo's release discard the install proof for another's.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -23,6 +26,7 @@ jobs:
   schema:
     name: Schema
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
 
@@ -60,6 +64,7 @@ jobs:
   changed:
     name: Detect changed manifests
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       apps: ${{ steps.detect.outputs.apps }}
       any: ${{ steps.detect.outputs.any }}
@@ -71,12 +76,26 @@ jobs:
       - name: List changed manifests
         id: detect
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          # On a pull_request the base tip; on a push the previous tip. Without the push
+          # case every release -- which lands as a push, not a PR -- would fall through to
+          # the "verify everything" branch and run the whole install matrix, ts-pack's
+          # 433 MB binary included, to prove one changed manifest.
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          NULL_SHA: "0000000000000000000000000000000000000000"
         run: |
           set -euo pipefail
-          if [[ -n "${BASE_SHA:-}" ]]; then
-            files="$(git diff --name-only --diff-filter=d "${BASE_SHA}" HEAD -- 'bucket/*.json')"
+          base=""
+          # `github.event.before` is the all-zero sentinel on a branch's first push, and a
+          # force-push can name a commit this checkout does not have. Both mean "no usable
+          # base", which must widen to everything rather than diff against nothing.
+          if [[ -n "${BASE_SHA:-}" && "${BASE_SHA}" != "${NULL_SHA}" ]] \
+            && git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null; then
+            base="${BASE_SHA}"
+          fi
+          if [[ -n "${base}" ]]; then
+            files="$(git diff --name-only --diff-filter=d "${base}" HEAD -- 'bucket/*.json')"
           else
+            echo "No usable base commit; verifying every manifest."
             files="$(ls bucket/*.json)"
           fi
           apps="$(printf '%s\n' "$files" | sed -n 's#^bucket/\(.*\)\.json$#\1#p' | jq -R . | jq -sc .)"
@@ -94,6 +113,7 @@ jobs:
     needs: changed
     if: ${{ needs.changed.outputs.any == 'true' }}
     runs-on: windows-latest
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:

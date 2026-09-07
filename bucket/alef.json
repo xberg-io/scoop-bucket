@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json",
-  "version": "0.85.1",
+  "version": "0.85.4",
   "description": "Opinionated polyglot binding generator for Rust libraries",
   "homepage": "https://github.com/xberg-io/alef",
   "license": "MIT",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/xberg-io/alef/releases/download/v0.85.1/alef-x86_64-pc-windows-msvc.zip",
-      "hash": "6a8d2badd071b5d42bdc7389c793274d5b803db3589578fcbd0cf1034ecc4d85",
+      "url": "https://github.com/xberg-io/alef/releases/download/v0.85.4/alef-x86_64-pc-windows-msvc.zip",
+      "hash": "fe1a443100b342553cd0628af56b8ae1f00ae0f1c7db6b627157cdb5c9410f69",
       "extract_dir": "alef-x86_64-pc-windows-msvc"
     }
   },

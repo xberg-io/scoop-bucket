@@ -134,8 +134,12 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           # Add the checkout itself, not the published repo: the whole point is to prove
-          # the manifest in *this* PR installs, before it is merged.
-          scoop bucket add xberg-pr "$env:GITHUB_WORKSPACE"
+          # the manifest in *this* PR installs, before it is merged. Scoop validates the
+          # bucket source against a git URL pattern, which a bare Windows path never
+          # matches, so hand it the same checkout as a file:// URL.
+          $bucketUri = 'file:///' + ($env:GITHUB_WORKSPACE -replace '\\', '/')
+          scoop bucket add xberg-pr $bucketUri
+          if ($LASTEXITCODE -ne 0) { throw "scoop bucket add failed for $bucketUri" }
           scoop install "xberg-pr/${{ matrix.app }}"
           if ($LASTEXITCODE -ne 0) { throw "scoop install ${{ matrix.app }} failed" }
 

@@ -74,6 +74,7 @@ lint = { exclude = [
   "**/package-lock.json",
   "**/pnpm-lock.yaml",
   "**/uv.lock",
+  "/.ai-rulez/.generated-manifest.json",
 ] }
 fmt = { exclude = [
   "**/*.lock",
@@ -82,6 +83,7 @@ fmt = { exclude = [
   "**/package-lock.json",
   "**/pnpm-lock.yaml",
   "**/uv.lock",
+  "/.ai-rulez/.generated-manifest.json",
 ] }
 commit = { stages = ["commit-msg"] }
 file_safety = { exclude = [
@@ -91,6 +93,7 @@ file_safety = { exclude = [
   "**/package-lock.json",
   "**/pnpm-lock.yaml",
   "**/uv.lock",
+  "/.ai-rulez/.generated-manifest.json",
 ] }
 
 # --- catalog tools (standalone binaries, PATH-probed) ---
@@ -102,5 +105,8 @@ enabled = true
 [[hooks.sources]]
 id = "ai-rulez"
 git = "https://github.com/Goldziher/ai-rulez.git"
-revision = "v4.9.3"
+revision = "ee42eef34f2922e4e75b75f25b1215b9492bb1aa"
 hooks = ["ai-rulez-validate"]
+
+[discovery]
+exclude = ["/.ai-rulez/.generated-manifest.json", "/.mcp.json"]

@@ -64,13 +64,22 @@ Xberg Scoop Bucket is written following strict AI engineering practices. That is
 
 ### Conventions
 
-We use the tool `ai-rulez`, vibe coded by @Goldziher, to manage our AI conventions. You are encouraged to use this tool — running the `task setup` will get you going, or run in your terminal:
+Use the reviewed `ai-rulez` CLI (based on 5.2.1, with the CLI source revision pinned in CI) to manage agent conventions. Edit authored content under
+`.ai-rulez/`; `AGENTS.md`, `CLAUDE.md` and harness directories are generated outputs.
+When adding marketplace or plugin settings, put them in `config.plugins.toml` and select
+the `plugins` layer through `default_layers` in the main `config.toml`.
 
 ```sh
-pnpm dlx ai-rulez@latest generate
+ai-rulez validate --no-local
+ai-rulez generate --no-local --strict-config
+task governance:check
 ```
 
-This will be scaffold the AI agent conventions (e.g. CLAUDE.md, AGENTS.md, subagents, skills, etc.). You can see the AGENTS.md generated afterwards.
+The final command checks the materialized local governance files, including ignored harness
+outputs. Installing governance hooks requires Python 3.11 or newer. Run `task governance:hooks:install` to install the repository's reviewed Poly hooks.
+The hooks validate staged sources and verify shipped plugin artifacts where present; CI also
+validates the authored content. Shared convention modules come from `xberg-io/agent-conventions`;
+Git credentials are needed when an included repository requires access.
 
 ### Customization
 

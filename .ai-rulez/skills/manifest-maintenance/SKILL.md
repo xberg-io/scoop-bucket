@@ -9,9 +9,9 @@ x-ai-rulez:
     name: manifest-maintenance
 ---
 
-# Manifest Maintenance
+## Manifest Maintenance
 
-## `bucket/*.json` is generated output
+### `bucket/*.json` is generated output
 
 Each manifest is written by its source repository's release pipeline through
 `xberg-io/actions/publish-scoop-manifests`. A hand-edit here survives only until that
@@ -28,7 +28,7 @@ repository's next release. Fix the template in the source repo:
 
 There is no Excavator bot. Nothing polls; the release pipeline pushes.
 
-## The two things that break installs silently
+### The two things that break installs silently
 
 **`extract_dir`** — the zip layouts differ per repo and no rule derives them:
 
@@ -41,18 +41,18 @@ There is no Excavator bot. Nothing polls; the release pipeline pushes.
 Scoop's literal `$version` must be written `$$version` in the template. An unescaped one
 renders to the current version and freezes `autoupdate` on it without erroring.
 
-## Validate locally
+### Validate locally
 
 ```bash
 curl -fsSL -o /tmp/scoop-schema.json https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json
-uvx check-jsonschema --schemafile /tmp/scoop-schema.json bucket/*.json
+uvx check-jsonschema==0.38.2 --schemafile /tmp/scoop-schema.json bucket/*.json
 ```
 
 Schema validity proves nothing about installability. The `windows-latest` job in
 `.github/workflows/validate-manifests.yml` is the only real check: it adds the checkout
 as a bucket, installs each changed app, and runs `<app> --version`.
 
-## Invariants CI enforces
+### Invariants CI enforces
 
 - `bin` must be `<manifest filename>.exe` — Scoop names the app from the filename
 - `version` must match the release the pipeline rendered

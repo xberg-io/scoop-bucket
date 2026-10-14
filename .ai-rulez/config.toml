@@ -1,4 +1,3 @@
-# AI-Rulez Configuration (migrated to V4 TOML format)
 # Documentation: https://github.com/Goldziher/ai-rulez
 
 version = "5.0"
@@ -6,22 +5,23 @@ name = 'scoop-bucket'
 description = 'Scoop bucket with app manifests for xberg-io CLI tools'
 gitignore = true
 presets = ["claude", "codex", "copilot", "cursor", "antigravity", "opencode", "pi"]
-builtins = ['default-commands']
+builtins = ["!git-workflow", 'default-commands']
 
 compact = true
 [[includes]]
 name = 'xberg-core'
 source = 'https://github.com/xberg-io/agent-conventions.git'
+ref = "adb0caa92c4d8155fb1680618f72a321a832660b"
 path = 'modules/core'
 merge_strategy = 'local-override'
 
-# Pinned by `ai-rulez migrate v5`: the 4.x default. Remove this line to take the v5 default.
-[header]
-text = """AI-RULEZ :: GENERATED FILE - DO NOT EDIT
-Source: .ai-rulez/config.toml
-Modify .ai-rulez/ content and regenerate with pnpm dlx ai-rulez@5.0.1 generate
-MCP server: pnpm dlx ai-rulez@5.0.1 mcp"""
-hashes = "full"
 
 [mcp]
-self_server_command = ["pnpm", "dlx", "ai-rulez@5.0.1", "mcp"]
+self_server_command = ["ai-rulez", "mcp"]
+[[mcp_servers]]
+name = "playwright"
+command = "npx"
+args = ["-y", "@playwright/mcp@0.0.83"]
+
+[lock]
+include_outputs = false

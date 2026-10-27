@@ -64,7 +64,7 @@ Xberg Scoop Bucket is written following strict AI engineering practices. That is
 
 ### Conventions
 
-Use the reviewed `ai-rulez` 5.3.0-based CLI (source revision pinned in CI) to manage agent conventions. Edit authored content under
+Use the latest `ai-rulez` release (CI installs `latest`; minimum 5.7.0) to manage agent conventions. Edit authored content under
 `.ai-rulez/`; `AGENTS.md`, `CLAUDE.md` and harness directories are generated outputs.
 When adding marketplace or plugin settings, put them in `config.plugins.toml` and select
 the `plugins` layer through `default_layers` in the main `config.toml`.

@@ -17,16 +17,12 @@ poly.local.toml
 .agents/mcp_config.json
 .agents/skills/
 .ai-rulez/.generated-manifest.json
-.ai-rulez/.generated-manifest.local.json
 .ai-rulez/local/
 .claude/agents/
 .claude/settings.json
 .claude/skills/
 .codex/agents/
 .codex/config.toml
-.cursor/agents/
-.cursor/commands/
-.cursor/mcp.json
 .github/agents/
 .github/prompts/iterate.prompt.md
 .github/prompts/parallelize.prompt.md
@@ -46,6 +42,7 @@ opencode.json
 **/.ai-rulez/.generated-manifest.local.json
 plugin/.ai-rulez/.generated-manifest.json
 .agents/settings.json
+.claude/settings.json
 .claude/plugins.json
 .codex/commands/
 .codex/plugins.json

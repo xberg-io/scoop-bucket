@@ -1,7 +1,9 @@
 ---
 type: Playbook
 title: Manifest Maintenance
-description: Scoop bucket manifest maintenance for xberg-io CLIs — why bucket/*.json is generated and must not be hand-edited, the extract_dir contract per app, $version escaping in autoupdate, and how to validate a manifest locally. Load when editing anything under bucket/ or debugging a failed scoop install.
+description: "Scoop manifest upkeep: bucket/*.json is generated, per-app extract_dir values, $version escaping in autoupdate, local validation. Use when editing a manifest under bucket/ or debugging a failed scoop install."
+paths:
+  - "bucket/**"
 x-ai-rulez:
   kind: skill
   id: manifest-maintenance
@@ -30,12 +32,20 @@ There is no Excavator bot. Nothing polls; the release pipeline pushes.
 
 ### The two things that break installs silently
 
-**`extract_dir`** — the zip layouts differ per repo and no rule derives them:
+**`extract_dir`** — the zip layouts differ per repo and no rule derives them. Get it wrong and
+`bin` resolves to nothing: the manifest hashes and validates and installs a broken shim.
 
-- `ts-pack` ships a **flat** zip → omit `extract_dir` entirely
-- `liter-llm` puts the **version in the directory name** →
-  `liter-llm-${version}-x86_64-pc-windows-msvc`
-- everyone else nests a directory named after the asset stem
+| App | Zip layout | `extract_dir` |
+|-----|-----------|---------------|
+| `xberg` | nested, dir named after the asset | `xberg-cli-x86_64-pc-windows-msvc` |
+| `crawlberg` | nested, dir named after the asset | `crawlberg-cli-x86_64-pc-windows-msvc` |
+| `html-to-markdown` | nested, dir named after the asset | `cli-x86_64-pc-windows-msvc` |
+| `liter-llm` | nested, **version in the dir name** | `liter-llm-${version}-x86_64-pc-windows-msvc` |
+| `ts-pack` | **flat — the `.exe` is at the zip root** | omitted entirely |
+| `alef` | nested, dir named after the asset | `alef-x86_64-pc-windows-msvc` |
+
+Confirm with `unzip -l <asset>` against the actual release before trusting any of these; a repo
+can change its packaging without anyone noticing the manifest went stale.
 
 **`$version` in `autoupdate`** — templates render through Python `string.Template`, so
 Scoop's literal `$version` must be written `$$version` in the template. An unescaped one

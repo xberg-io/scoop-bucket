@@ -8,7 +8,7 @@ repo owns exactly one manifest and holds the template that produces it:
 
 | Manifest | Written by | Template |
 |----------|-----------|----------|
-| `bucket/xberg.json` | `xberg-io/xberg` | `scripts/publish/xberg.json.tmpl` |
+| `bucket/xberg.json` (not published yet) | `xberg-io/xberg` | `scripts/publish/xberg.json.tmpl` |
 | `bucket/crawlberg.json` | `xberg-io/crawlberg` | `scripts/publish/crawlberg.json.tmpl` |
 | `bucket/html-to-markdown.json` | `xberg-io/html-to-markdown` | `scripts/publish/html-to-markdown.json.tmpl` |
 | `bucket/liter-llm.json` | `xberg-io/liter-llm` | `scripts/publish/liter-llm.json.tmpl` |

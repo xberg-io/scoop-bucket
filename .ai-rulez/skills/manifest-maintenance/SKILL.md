@@ -48,7 +48,7 @@ Schema validity proves nothing about installability. The `windows-latest` job in
 `.github/workflows/validate-manifests.yml` is the only real check: it adds the checkout
 as a bucket, installs each changed app, and runs `<app> --version`.
 
-### Invariants CI enforces
+### Invariants (bin: `validate-manifests.yml`; version and zero-SHA: `xberg-io/actions` `publish-scoop-manifests` before push, so a hand edit here skips them)
 
 - `bin` must be `<manifest filename>.exe` — Scoop names the app from the filename
 - `version` must match the release the pipeline rendered

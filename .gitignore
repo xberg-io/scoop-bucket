@@ -13,25 +13,14 @@ GEMINI.md
 poly.local.toml
 
 # BEGIN ai-rulez (DO NOT EDIT - managed by ai-rulez)
-.agents/agents/
-.agents/mcp_config.json
 .agents/skills/
-.ai-rulez/.generated-manifest.json
 .ai-rulez/local/
 .claude/agents/
-.claude/settings.json
+.claude/rules/logging-tracing.md
 .claude/skills/
 .codex/agents/
-.codex/config.toml
-.github/agents/
-.github/prompts/iterate.prompt.md
-.github/prompts/parallelize.prompt.md
 .opencode/agents/
 .opencode/commands/
-.pi/agents/
-.pi/mcp.json
-.pi/prompts/
-.vscode/mcp.json
 AGENTS.md
 CLAUDE.md
 opencode.json

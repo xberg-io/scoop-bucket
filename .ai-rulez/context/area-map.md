@@ -8,7 +8,7 @@ x-ai-rulez:
     priority: high
 ---
 
-# Area Map
+## Area Map
 
 Scoop bucket for the xberg-io CLIs.
 

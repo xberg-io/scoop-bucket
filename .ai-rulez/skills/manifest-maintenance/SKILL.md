@@ -17,16 +17,8 @@ x-ai-rulez:
 
 Each manifest is written by its source repository's release pipeline through
 `xberg-io/actions/publish-scoop-manifests`. A hand-edit here survives only until that
-repository's next release. Fix the template in the source repo:
-
-| Manifest | Source repo | Template |
-|----------|-------------|----------|
-| `xberg.json` | `xberg-io/xberg` | `scripts/publish/xberg.json.tmpl` |
-| `crawlberg.json` | `xberg-io/crawlberg` | `scripts/publish/crawlberg.json.tmpl` |
-| `html-to-markdown.json` | `xberg-io/html-to-markdown` | `scripts/publish/html-to-markdown.json.tmpl` |
-| `liter-llm.json` | `xberg-io/liter-llm` | `scripts/publish/liter-llm.json.tmpl` |
-| `ts-pack.json` | `xberg-io/tree-sitter-language-pack` | `scripts/publish/ts-pack.json.tmpl` |
-| `alef.json` | `xberg-io/alef` | `scripts/publish/alef.json.tmpl` |
+repository's next release. Fix the template in the source repo; the manifest → source repo →
+template table is in `MANIFESTS.md`.
 
 There is no Excavator bot. Nothing polls; the release pipeline pushes.
 
@@ -35,14 +27,8 @@ There is no Excavator bot. Nothing polls; the release pipeline pushes.
 **`extract_dir`** — the zip layouts differ per repo and no rule derives them. Get it wrong and
 `bin` resolves to nothing: the manifest hashes and validates and installs a broken shim.
 
-| App | Zip layout | `extract_dir` |
-|-----|-----------|---------------|
-| `xberg` | nested, dir named after the asset | `xberg-cli-x86_64-pc-windows-msvc` |
-| `crawlberg` | nested, dir named after the asset | `crawlberg-cli-x86_64-pc-windows-msvc` |
-| `html-to-markdown` | nested, dir named after the asset | `cli-x86_64-pc-windows-msvc` |
-| `liter-llm` | nested, **version in the dir name** | `liter-llm-${version}-x86_64-pc-windows-msvc` |
-| `ts-pack` | **flat — the `.exe` is at the zip root** | omitted entirely |
-| `alef` | nested, dir named after the asset | `alef-x86_64-pc-windows-msvc` |
+The per-app values (nested vs flat zips, `liter-llm`'s versioned dir, `ts-pack`'s omitted
+`extract_dir`) are in `MANIFESTS.md` § `extract_dir` per app, the single source for them.
 
 Confirm with `unzip -l <asset>` against the actual release before trusting any of these; a repo
 can change its packaging without anyone noticing the manifest went stale.

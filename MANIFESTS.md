@@ -56,10 +56,10 @@ differs and cannot be derived from a rule:
 |-----|-----------|---------------|
 | `crawlberg` | nested, dir named after the asset | `crawlberg-cli-x86_64-pc-windows-msvc` |
 | `html-to-markdown` | nested, dir named after the asset | `cli-x86_64-pc-windows-msvc` |
-| `liter-llm` | nested, **version in the dir name** | `liter-llm-<version>-x86_64-pc-windows-msvc` |
-| `ts-pack` | **flat — the `.exe` is at the zip root** | omitted |
+| `liter-llm` | nested, **version in the dir name** | the concrete version when rendered (`liter-llm-2.4.0-x86_64-pc-windows-msvc`), literal `liter-llm-$version-x86_64-pc-windows-msvc` in `autoupdate` |
+| `ts-pack` | **flat — the `.exe` is at the zip root**; ships `64bit` and `arm64` | omitted |
 | `alef` | nested, dir named after the asset | `alef-x86_64-pc-windows-msvc` |
-| `xberg` | nested, dir named after the asset | `xberg-cli-x86_64-pc-windows-msvc` |
+| `xberg` | nested, dir named after the asset (no `bucket/xberg.json` published yet) | `xberg-cli-x86_64-pc-windows-msvc` |
 
 ## `$version` in `autoupdate`
 

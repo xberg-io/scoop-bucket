@@ -4,9 +4,12 @@ version = "5.0"
 name = 'scoop-bucket'
 description = 'Scoop bucket with app manifests for xberg-io CLI tools'
 gitignore = true
-presets = ["claude", "codex", "copilot", "cursor", "antigravity", "opencode", "pi"]
-builtins = ["!git-workflow", 'default-commands']
+# ~keep The manifest is committed so CI can detect stale generated files.
+gitignore_exclude = [".ai-rulez/.generated-manifest.json"]
+presets = ["claude", "codex", "opencode"]
+builtins = ["!agent-delegation", "!git-workflow", "default-commands"]
 
+default_layers = ["plugins"]
 compact = true
 [[includes]]
 name = 'xberg-core'
@@ -15,13 +18,17 @@ ref = "adb0caa92c4d8155fb1680618f72a321a832660b"
 path = 'modules/core'
 merge_strategy = 'local-override'
 
-
 [mcp]
 self_server_command = ["ai-rulez", "mcp"]
-[[mcp_servers]]
-name = "playwright"
-command = "npx"
-args = ["-y", "@playwright/mcp@0.0.83"]
+# ~keep Skill discovery only: the full server lists 67 tools (~38k tokens of schema) at every session start.
+serve_skills = true
+read_only = true
+discover_skills = "repo"
+tools = ["find_skill", "load_skill"]
 
 [lock]
 include_outputs = false
+
+[rules]
+# ~keep Glob-scoped rules stay out of AGENTS.md: rule files for Claude, path-gated skills for Codex.
+scoped_fallback = "skill"

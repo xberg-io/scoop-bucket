@@ -7,14 +7,14 @@ gitignore = true
 # ~keep The manifest is committed so CI can detect stale generated files.
 gitignore_exclude = [".ai-rulez/.generated-manifest.json"]
 presets = ["claude", "codex", "opencode"]
-builtins = ["!agent-delegation", "!git-workflow", "default-commands"]
+builtins = ["!agent-delegation", "!git-workflow", "!testing/test-alongside-code", "default-commands"]
 
 default_layers = ["plugins"]
 compact = true
 [[includes]]
 name = 'xberg-core'
 source = 'https://github.com/xberg-io/agent-conventions.git'
-ref = "adb0caa92c4d8155fb1680618f72a321a832660b"
+ref = "6e7f6a6793ea7380b916367e10a8acd13c3afbc3"
 path = 'modules/core'
 merge_strategy = 'local-override'
 

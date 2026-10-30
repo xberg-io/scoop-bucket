@@ -55,7 +55,7 @@ jobs:
           key: uv-${{ runner.os }}-${{ steps.python.outputs.version }}-check-jsonschema
 
       - name: Validate every manifest against the schema
-        run: uvx check-jsonschema --schemafile scoop-schema.json bucket/*.json
+        run: uvx check-jsonschema@0.39.0 --schemafile scoop-schema.json bucket/*.json
 
       - name: Check the filename matches the app name Scoop will install
         run: |
@@ -134,6 +134,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # Scoop is the installer under test, not a build tool, so it comes from its own installer. ~keep
       - name: Install Scoop
         shell: pwsh
         run: |

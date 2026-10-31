@@ -12,5 +12,9 @@ uv = "0.13.6"
 description = "Install the mise toolchain and development hooks"
 run = ["mise install", { task = "governance:hooks:install" }]
 
+[tasks."bucket:schema:check"]
+description = "Validate every manifest against the Scoop schema in scoop-schema.json (fetched by CI from ScoopInstaller/Scoop)"
+run = "uvx check-jsonschema@0.39.0 --schemafile scoop-schema.json bucket/*.json"
+
 [task_config]
 includes = ["mise-tasks", "mise-tasks/shared.toml"]

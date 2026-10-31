@@ -55,7 +55,7 @@ jobs:
           key: uv-${{ runner.os }}-${{ steps.python.outputs.version }}-check-jsonschema
 
       - name: Validate every manifest against the schema
-        run: uvx check-jsonschema@0.39.0 --schemafile scoop-schema.json bucket/*.json
+        run: mise run bucket:schema:check
 
       - name: Check the filename matches the app name Scoop will install
         run: |

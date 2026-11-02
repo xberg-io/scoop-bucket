@@ -7,11 +7,11 @@
   "architecture": {
     "64bit": {
       "url": "https://github.com/xberg-io/tree-sitter-language-pack/releases/download/v1.23.1/ts-pack-x86_64-pc-windows-msvc.zip",
-      "hash": "663cea8f98d306395503b44d836112d6347e51e9aec0263ff4722694484d5bbc"
+      "hash": "0c9e0a682d84e47f4bcedf561ab8c8f969cf4a524b3bf82ffea1bc038b391b1a"
     },
     "arm64": {
       "url": "https://github.com/xberg-io/tree-sitter-language-pack/releases/download/v1.23.1/ts-pack-aarch64-pc-windows-msvc.zip",
-      "hash": "725aaeded697ef9de1e528d64da4c7189ec3bc07ac67d15bd0ae8e043c40e8da"
+      "hash": "1b5e9aa0b99b17e823fca24fc06c3b35789ec5f140896888a42e60abc0f9cb0f"
     }
   },
   "bin": "ts-pack.exe",

@@ -40,8 +40,7 @@ renders to the current version and freezes `autoupdate` on it without erroring.
 ### Validate locally
 
 ```bash
-curl -fsSL -o /tmp/scoop-schema.json https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json
-uvx check-jsonschema==0.38.2 --schemafile /tmp/scoop-schema.json bucket/*.json
+uvx check-jsonschema==0.38.2 --schemafile https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json bucket/*.json
 ```
 
 Schema validity proves nothing about installability. The `windows-latest` job in

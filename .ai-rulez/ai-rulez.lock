@@ -2,9 +2,9 @@
 # Refresh it with `ai-rulez lock`; `ai-rulez generate --locked` fails when it is stale.
 
 version = 1
-ai_rulez_version = '5.11.1'
+ai_rulez_version = '5.14.0'
 scope = 'all'
-tree = 'sha256:e2edf14f3c9a0aee61036b7941eced7a0eb5f04dda2b93c8672da7c3f7a138e9'
+tree = 'sha256:23adaf060a1bcf82cd11401d5e159d12a845037f0ab7dd0863768ea654784e93'
 
 [[include]]
 name = 'xberg-core'
@@ -80,7 +80,7 @@ digest = 'sha256:5cb87728d1449fadda6d8557501fcc0823509c60a37058ce4d2dda123296f67
 name = 'manifest-maintenance'
 source = '.ai-rulez/skills/manifest-maintenance/SKILL.md'
 commit = ''
-digest = 'sha256:e579e279b97e808e697f49318c8104a1fa5814a9d76e25fbee2fd89719f71a74'
+digest = 'sha256:704c721eb05b02cfbf063b7a56279bb3995c05a677e22035604e4196d33da60e'
 
 [[served]]
 name = 'mise-tasks'
@@ -158,4 +158,4 @@ digest = 'sha256:da94881d952eaba41fd5d7d99d57c5d3c38f276c931b8d94a4f35eca780c539
 kind = 'skill'
 id = 'manifest-maintenance'
 path = 'skills/manifest-maintenance'
-digest = 'sha256:3d537b2852252184f502162383a5670164d9086fca0a6765afe95fc7ab221295'
+digest = 'sha256:d35466ff7013a688ad234c88552c3b5f67eca5819c8aeb6a92265a7fd6afad75'
